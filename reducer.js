@@ -10,7 +10,7 @@ function createStore(reducer) {
     return state;
   }
 
-  dispatch({ type: '@@INIT' });
+  //dispatch({ type: '@@INIT' });
 
   // Store
   return {
@@ -30,11 +30,12 @@ function changeCount(state = {count: 0}, action) {
 
 function render() {
   let container = document.getElementById('container');
-  container.textContent = store.getState.count;
+  container.textContent = store.getState().count;
 }
 
 // createStore takes the changeCount reducer as an argument
 let store = createStore(changeCount);
+store.dispatch({type: '@@INIT'});
 
 let button = document.getElementById('button');
 
