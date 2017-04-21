@@ -1,27 +1,43 @@
-let state;
-function changeState(state = {count: 0}, action){
-    switch (action.type) {
-      case 'INCREASE_COUNT':
-        return {count: state.count + 1}
-      default:
-        return state;
-    }
+function createStore(reducer) {
+  let state;
+
+  function dispatch(action) {
+    state = reducer(state, action);
+    render();
   }
 
-function dispatch(action){
-  state = changeState(state, action)
-  render()
+  function getState() {
+    return state;
+  }
+
+  dispatch({ type: '@@INIT' });
+
+  // Store
+  return {
+    dispatch,
+    getState
+  };
 }
 
-function render(){
-  let container = document.getElementById('container')
-  container.textContent = state.count
+function changeCount(state = {count: 0}, action) {
+  switch (action.type) {
+    case 'INCREASE_COUNT':
+      return {count: state.count + 1}
+    default:
+      return state;
+  }
 }
 
-  dispatch({type: '@@INIT'})
-  
-  let button = document.getElementById('button');
+function render() {
+  let container = document.getElementById('container');
+  container.textContent = store.getState.count;
+}
 
-  button.addEventListener('click', function(){
-    dispatch({type: 'INCREASE_COUNT'})
-  })
+// createStore takes the changeCount reducer as an argument
+let store = createStore(changeCount);
+
+let button = document.getElementById('button');
+
+button.addEventListener('click', function(){
+  store.dispatch({type: 'INCREASE_COUNT'})
+})
